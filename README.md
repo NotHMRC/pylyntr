@@ -94,3 +94,7 @@ A dataclass with fields: `id`, `content`, `created_at`, `reposted`, `has_image`,
 ### `User`
 
 A dataclass with fields: `id`, `handle`, `bio`, `created_at`, `username`, `iq`, `verified`, `lynt_coins`, `admin`, `contributor`, `login_streak`, `followers`, `follows_user`, `name_colour`, `following`.
+
+## AI
+
+An LLM (DeepSeek V4 Pro) was used to help write this README and a portion of `LyntrClient.api_request()`, and to review the code.
