@@ -1,0 +1,28 @@
+[project]
+name = "pylyntr"
+version = "0.1.0"
+description = "A Python library for the lyntr.gizmowizard.tech API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.34.2"
+]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.411",
+    "ruff>=0.15.22",
+]
+
+examples = [
+    "python-dotenv",
+    "notify-py",
+    "simpleeval"
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
