@@ -1,6 +1,6 @@
 """Templates for creating bots."""
 from .client import LyntrClient
-from .dataclasses import Post
+from .dataclasses import Post, FeedType
 import requests
 
 from abc import ABC, abstractmethod
@@ -15,7 +15,7 @@ class PostReplyBot(LyntrClient, ABC):
     post_message: str | None = None
     check_interval: int = MINUTE * 1
     post_id: int | None = None
-    seen_comments: list[int] | None = None
+    seen_comments: list[int] = []
 
     def init(self) -> None:
         """Initialise the bot. Normally called on run()."""
@@ -23,8 +23,6 @@ class PostReplyBot(LyntrClient, ABC):
             raise TypeError("Subclasses of PostReplyBot must override post_message")
         if self.post_id is None:
             self.post_id = self.create_post(self.post_message).id
-        if self.seen_comments is None:
-            self.seen_comments = []
 
     def init_custom(self) -> None:
         """Function for adding custom behaviour on startup."""
@@ -41,6 +39,7 @@ class PostReplyBot(LyntrClient, ABC):
     def run(self) -> None:
         """Start the bot's main loop, polling for new comments."""
         self.init()
+        self.init_custom()
         try:
             while True:
                 try:
@@ -62,6 +61,65 @@ class PostReplyBot(LyntrClient, ABC):
     @abstractmethod
     def handle_comment(self, comment: Post) -> None:
         """Called for each new comment. Subclasses must implement this."""
+        pass
+
+    def run_after_cycle(self, successful: bool) -> None:
+        """Called after each poll cycle. Override to add custom behaviour."""
+        pass
+
+    def run_on_shutdown(self) -> None:
+        """Called when the bot receives a keyboard interrupt. Override for cleanup."""
+        pass
+
+class GlobalPostCommandBot(LyntrClient):
+    """Template for creating bots that reply to commands in posts."""
+
+    check_interval: int = MINUTE * 1
+    seen_posts: list[int] = []
+    command_list: list[str] = []
+
+    def init(self) -> None:
+        """Initialise the bot. Normally called on run()."""
+        pass
+
+    def init_custom(self) -> None:
+        """Function for adding custom behaviour on startup."""
+        pass
+
+    def append_post(self, post: Post) -> None:
+        """Mark a post as seen. Override to change where seen posts are stored."""
+        self.seen_posts.append(post.id) # pyright: ignore[reportOptionalMemberAccess]
+
+    def seen_post(self, post: Post) -> bool:
+        """Check whether a post has already been seen. Override to change where seen posts are stored."""
+        return post.id in self.seen_posts # pyright: ignore[reportOperatorIssue]
+
+    def run(self) -> None:
+        """Start the bot's main loop, polling for new posts."""
+        self.init()
+        self.init_custom()
+        try:
+            while True:
+                try:
+                    for post in self.posts(FeedType.New):
+                        if not self.seen_post(post):
+                            self.append_post(post)
+                            for command in self.command_list:
+                                if command in post.content:
+                                    self.handle_command(post, command)
+                    self.run_after_cycle(successful=True)
+                except requests.RequestException as e:
+                    print(f"Request failed: {e}")
+                    self.run_after_cycle(successful=False)
+                sleep(self.check_interval)
+        except KeyboardInterrupt:
+            print("Shutting down...")
+            self.run_on_shutdown()
+            return
+
+    @abstractmethod
+    def handle_command(self, post: Post, command: str) -> None:
+        """Called for each new post with a command. Subclasses must implement this."""
         pass
 
     def run_after_cycle(self, successful: bool) -> None:
