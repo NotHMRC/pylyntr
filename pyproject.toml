@@ -1,6 +1,6 @@
 [project]
 name = "pylyntr"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python library for the lyntr.gizmowizard.tech API"
 readme = "README.md"
 requires-python = ">=3.11"

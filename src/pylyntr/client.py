@@ -164,14 +164,9 @@ class LyntrClient:
 
     def edit_post(self, post: Post, content: str) -> None:
         """Edit a post you own."""
-        try:
-            self.api_request(
-                f"lynts/{post.id}", {"content": content}, method=HTTPMethod.PUT
-            )
-        except requests.HTTPError as e:
-            if e.response is not None and e.response.status_code == 500:
-                return # temporary workaround for API bug
-            raise
+        self.api_request(
+            f"lynts/{post.id}", {"content": content}, method=HTTPMethod.PUT
+        )
 
     def latest_post(self) -> Post | None:
         """Get the latest post."""

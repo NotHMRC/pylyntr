@@ -26,6 +26,7 @@ class PartialUser:
 @dataclass
 class User:
     """Object storing information about a user."""
+
     id: int
     handle: str
     bio: str | None
@@ -84,7 +85,7 @@ class PartialPost:
     reposted_by_user: bool | None = None
     liked_by_followed: bool | None = None
     user: PartialUser | User | None = None
-    referenced_lynts: list[Any] | None = None # TODO: type correctly
+    referenced_lynts: list[Any] | None = None  # TODO: type correctly
 
     edited_at: datetime | None = None
     gif_url: str | None = None
@@ -95,6 +96,7 @@ class PartialPost:
 @dataclass
 class Post:
     """Object storing information about a post."""
+
     id: int
     content: str
     created_at: datetime
@@ -165,6 +167,7 @@ class Post:
 
 class FeedType(StrEnum):
     """Enum containing feed types. Used by LyntrClient.posts."""
+
     ForYou = "For you"
     New = "New"
     Following = "Following"
