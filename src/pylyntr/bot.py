@@ -30,11 +30,11 @@ class PostReplyBot(LyntrClient, ABC):
 
     def append_comment(self, comment: Post) -> None:
         """Mark a comment as seen. Override to change where seen comments are stored."""
-        self.seen_comments.append(comment.id) # pyright: ignore[reportOptionalMemberAccess]
+        self.seen_comments.append(comment.id)
 
     def seen_comment(self, comment: Post) -> bool:
         """Check whether a comment has already been seen. Override to change where seen comments are stored."""
-        return comment.id in self.seen_comments # pyright: ignore[reportOperatorIssue]
+        return comment.id in self.seen_comments
 
     def run(self) -> None:
         """Start the bot's main loop, polling for new comments."""
@@ -71,7 +71,7 @@ class PostReplyBot(LyntrClient, ABC):
         """Called when the bot receives a keyboard interrupt. Override for cleanup."""
         pass
 
-class GlobalPostCommandBot(LyntrClient):
+class GlobalPostCommandBot(LyntrClient, ABC):
     """Template for creating bots that reply to commands in posts."""
 
     check_interval: int = MINUTE * 1
@@ -88,11 +88,11 @@ class GlobalPostCommandBot(LyntrClient):
 
     def append_post(self, post: Post) -> None:
         """Mark a post as seen. Override to change where seen posts are stored."""
-        self.seen_posts.append(post.id) # pyright: ignore[reportOptionalMemberAccess]
+        self.seen_posts.append(post.id)
 
     def seen_post(self, post: Post) -> bool:
         """Check whether a post has already been seen. Override to change where seen posts are stored."""
-        return post.id in self.seen_posts # pyright: ignore[reportOperatorIssue]
+        return post.id in self.seen_posts
 
     def run(self) -> None:
         """Start the bot's main loop, polling for new posts."""
@@ -107,6 +107,7 @@ class GlobalPostCommandBot(LyntrClient):
                             for command in self.command_list:
                                 if command in post.content:
                                     self.handle_command(post, command)
+                                    break
                     self.run_after_cycle(successful=True)
                 except requests.RequestException as e:
                     print(f"Request failed: {e}")
