@@ -49,8 +49,8 @@ class LyntrClient:
         """Test if the configured credentials work correctly."""
         try:
             self.api_request("me")
-        except requests.HTTPError:
-            raise ClientError("Test failed! Check credentials are correct.")
+        except requests.HTTPError as e:
+            raise ClientError(f"Test failed! Check credentials are correct. {e}")
 
     def api_request(
         self,
@@ -109,7 +109,7 @@ class LyntrClient:
         self.api_request(f"lynts/{post.id}", method=HTTPMethod.DELETE)
 
     def get_user(self, handle: str | None = None) -> User:
-        """Create a User object from an ID."""
+        """Create a User object from a handle."""
         if not handle:
             handle = User.from_dict(self.api_request("me").json()).handle
         return User.from_dict(self.api_request(f"users/{handle}").json())
@@ -173,6 +173,7 @@ class LyntrClient:
                 return # temporary workaround for API bug
             raise
 
-    def latest_post(self) -> Post:
+    def latest_post(self) -> Post | None:
         """Get the latest post."""
-        return self.posts(FeedType.New)[0]
+        posts = self.posts(FeedType.New)
+        return None if len(posts) < 1 else posts[0]

@@ -71,7 +71,7 @@ Constructs the client and validates credentials via `test()`.
 | `like_post(post)` | `None` | Like a post |
 | `unlike_post(post)` | `None` | Unlike a post |
 | `posts(feed_type)` | `list[Post]` | Get posts from a feed (default `FeedType.ForYou`) |
-| `latest_post()` | `Post` | Get the most recent post from the New feed |
+| `latest_post()` | `Post \| None` | Get the most recent post from the New feed |
 | `search(query)` | `list[Post]` | Search posts by query |
 | `get_user(handle)` | `User` | Fetch a user by handle (defaults to self) |
 | `follow_user(user)` | `None` | Follow a user |
