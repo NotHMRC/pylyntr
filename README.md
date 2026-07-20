@@ -42,7 +42,7 @@ for post in client.posts():
     print(f"@{post.user.username}: {post.content}")
 ```
 
-Get a client id and secret from the [Developer API page](https://lyntr.gizmowizard.tech/developer).
+Get a client ID and secret from the [Developer API page](https://lyntr.gizmowizard.tech/developer).
 
 ## API Reference
 
