@@ -20,11 +20,12 @@ class PartialUser:
     follows_user: bool | None = None
     lyntr_coins: int | None = None
 
-    name_colour: Any | None = None  # needs research
+    name_colour: str | None = None
 
 
 @dataclass
 class User:
+    """Object storing information about a user."""
     id: int
     handle: str
     bio: str | None
@@ -83,16 +84,17 @@ class PartialPost:
     reposted_by_user: bool | None = None
     liked_by_followed: bool | None = None
     user: PartialUser | User | None = None
-    referenced_lynts: list[Any] | None = None  # needs research
+    referenced_lynts: list[Any] | None = None # TODO: type correctly
 
     edited_at: datetime | None = None
     gif_url: str | None = None
     gif_preview_url: str | None = None
-    poll: Any | None = None  # needs research
+    poll: Any | None = None  # TODO: type correctly
 
 
 @dataclass
 class Post:
+    """Object storing information about a post."""
     id: int
     content: str
     created_at: datetime
@@ -106,13 +108,13 @@ class Post:
     reposted_by_user: bool
     liked_by_followed: bool
     user: PartialUser | User
-    referenced_lynts: list[Any] = field(default_factory=list)  # needs research
+    referenced_lynts: list[Any] = field(default_factory=list)  # TODO: type correctly
 
     edited_at: datetime | None = None
     gif_url: str | None = None
     gif_preview_url: str | None = None
-    parent: PartialPost | None = None  # needs research
-    poll: Any | None = None  # needs research
+    parent: PartialPost | None = None  # TODO: implement
+    poll: Any | None = None  # TODO: type correctly
 
     @classmethod
     def from_dict(cls, post: dict):
@@ -162,6 +164,7 @@ class Post:
 
 
 class FeedType(StrEnum):
+    """Enum containing feed types. Used by LyntrClient.posts."""
     ForYou = "For you"
     New = "New"
     Following = "Following"

@@ -170,7 +170,7 @@ class LyntrClient:
             )
         except requests.HTTPError as e:
             if e.response is not None and e.response.status_code == 500:
-                return
+                return # temporary workaround for API bug
             raise
 
     def latest_post(self) -> Post:
