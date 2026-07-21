@@ -17,7 +17,7 @@ source .venv/bin/activate
 pip install "pylyntr @ git+https://github.com/NotHMRC/pylyntr.git"
 ```
 
-Requires Python 3.10+.
+Requires Python 3.11+.
 
 ## Quick Start
 
