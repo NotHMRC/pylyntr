@@ -17,7 +17,7 @@ source .venv/bin/activate
 pip install "pylyntr @ git+https://github.com/NotHMRC/pylyntr.git"
 ```
 
-Requires Python 3.10+.
+Requires Python 3.11+.
 
 ## Quick Start
 
@@ -94,6 +94,79 @@ A dataclass with fields: `id`, `content`, `created_at`, `reposted`, `has_image`,
 ### `User`
 
 A dataclass with fields: `id`, `handle`, `bio`, `created_at`, `username`, `iq`, `verified`, `lynt_coins`, `admin`, `contributor`, `login_streak`, `followers`, `follows_user`, `name_colour`, `following`.
+
+## Bots Templates
+
+The `pylyntr.bot` module provides templates for building bots.
+
+### `PostReplyBot` - reply to comments on your post
+
+```python
+from pylyntr.bot import PostReplyBot
+from pylyntr import Post
+
+class MyBot(PostReplyBot):
+    post_message = "hello"
+
+    def handle_comment(self, comment: Post) -> None:
+        self.reply(comment, "hi")
+
+bot = MyBot(client_id="...", client_secret="...")
+bot.run()
+```
+
+### `GlobalPostCommandBot` - respond to commands in posts
+
+```python
+from pylyntr.bot import GlobalPostCommandBot
+from pylyntr import Post
+
+class MyBot(GlobalPostCommandBot):
+    command_list = ["!hello", "!ping"]
+
+    def handle_command(self, post: Post, command: str) -> None:
+        match command:
+            case "!hello":
+                self.reply(post, "hello!")
+            case "!ping":
+                self.reply(post, "pong!")
+
+bot = MyBot(client_id="...", client_secret="...")
+bot.run()
+```
+
+### Template Reference
+
+#### `PostReplyBot(LyntrClient, ABC)`
+
+Monitors comments on a post and calls `handle_comment` for each new one.
+
+| Attribute / Method | Description |
+|---|---|
+| `post_message` | Content of the post the bot creates and monitors - **must override** |
+| `post_id` | ID of the monitored post (auto-created from `post_message`) |
+| `check_interval` | Seconds between poll cycles (default `60`) |
+| `run()` | Start the main loop (calls `init()`, `init_custom()`, then polls) |
+| `handle_comment(comment)` | Called for each new comment - **must implement** |
+| `init()` | Initialise state (do not override) |
+| `init_custom()` | Implement for custom startup behaviour |
+| `run_after_cycle(successful)` | Function called after each poll cycle |
+| `run_on_shutdown()` | Function called on `KeyboardInterrupt` |
+
+#### `GlobalPostCommandBot(LyntrClient, ABC)`
+
+Polls the New feed and calls `handle_command` when a post contains a command.
+
+| Attribute / Method | Description |
+|---|---|
+| `command_list` | List of command strings to listen for - **should override** |
+| `check_interval` | Seconds between poll cycles (default `60`) |
+| `run()` | Start the main loop (calls `init()`, `init_custom()`, then polls) |
+| `handle_command(post, command)` | Called for each matching post - **must implement** |
+| `init()` | Initialise state (do not override) |
+| `init_custom()` | Implement for custom startup behaviour |
+| `run_after_cycle(successful)` | Function called after each poll cycle |
+| `run_on_shutdown()` | Function called on `KeyboardInterrupt` |
 
 ## AI
 

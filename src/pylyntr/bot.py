@@ -1,4 +1,5 @@
 """Templates for creating bots."""
+
 from .client import LyntrClient
 from .dataclasses import Post, FeedType
 import requests
@@ -8,6 +9,7 @@ from time import sleep
 
 SECOND = 1
 MINUTE = SECOND * 60
+
 
 class PostReplyBot(LyntrClient, ABC):
     """Template for creating bots that reply to comments on a post."""
@@ -43,7 +45,7 @@ class PostReplyBot(LyntrClient, ABC):
         try:
             while True:
                 try:
-                    post = self.get_post(self.post_id) # pyright: ignore[reportArgumentType]
+                    post = self.get_post(self.post_id)  # pyright: ignore[reportArgumentType]
                     for comment in self.get_comments(post):
                         if not self.seen_comment(comment):
                             self.append_comment(comment)
@@ -70,6 +72,7 @@ class PostReplyBot(LyntrClient, ABC):
     def run_on_shutdown(self) -> None:
         """Called when the bot receives a keyboard interrupt. Override for cleanup."""
         pass
+
 
 class GlobalPostCommandBot(LyntrClient, ABC):
     """Template for creating bots that reply to commands in posts."""
