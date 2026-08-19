@@ -1,4 +1,6 @@
-# pylyntr
+# pylyntr [UNMAINTAINED] 
+
+*The maintained repo can be found on [CodeBerg](https://codeberg.org/NotHMRC/pylyntr) and the pip repo [here.](https://pypi.org/project/pylyntr/)* 
 
 A Python library for the [lyntr.gizmowizard.tech](https://lyntr.gizmowizard.tech) API.
 
@@ -14,7 +16,7 @@ uv add "pylyntr @ git+https://github.com/NotHMRC/pylyntr.git"
 ```bash
 python3 -m venv .venv # if venv doesn't already exist
 source .venv/bin/activate
-pip install "pylyntr @ git+https://github.com/NotHMRC/pylyntr.git"
+pip install pylyntr
 ```
 
 Requires Python 3.11+.
